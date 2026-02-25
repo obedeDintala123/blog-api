@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String    @unique
+  password   String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  posts      Post[]
+  likedPosts Post[]    @relation("UserLikes")
+  comments   Comment[]
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  content     Json
+  published   Boolean   @default(false)
+  slug        String    @unique
+  coverImage  String?
+  category    Category  @default(TECH)
+  postType    PostType  @default(TOP_RIGHT)
+  authorId    Int
+  author      User      @relation(fields: [authorId], references: [id])
+  likedBy     User[]    @relation("UserLikes")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Category {
+  TECH
+  LIFESTYLE
+  TRAVEL
+  FOOD
+  EDUCATION
+  HEALTH
+  FINANCE
+  SPORTS
+  ENTERTAINMENT
+  BUSINESS
+  SCIENCE
+  ART
+}
+
+enum PostType {
+  TOP_LEFT
+  TOP_RIGHT
+  BOTTOM_LEFT
+  BOTTOM_RIGHT
+}

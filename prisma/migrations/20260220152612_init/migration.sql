@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "PostType" AS ENUM ('TOP_LEFT', 'TOP_RIGHT', 'BOTTOM_LEFT', 'BOTOM_RIGHT');
+
+-- AlterTable
+ALTER TABLE "Post" ADD COLUMN     "postType" "PostType" NOT NULL DEFAULT 'TOP_RIGHT';
