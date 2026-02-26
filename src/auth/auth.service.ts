@@ -66,14 +66,6 @@ export class AuthService {
 
     const token = this.jwt.sign(payLoad);
 
-    response.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/',
-    });
-
-    return response.status(200).send({ payLoad });
+    return response.status(200).send({ token });
   }
 }
